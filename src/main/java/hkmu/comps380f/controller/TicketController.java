@@ -42,8 +42,9 @@ public class TicketController {
     public static class Form {
         private String bookName;
         private String author;
-        private float price;
         private String description;
+        private float price;
+        private boolean availability;
         private MultipartFile attachments;
 
         // Getters and Setters of customerName, subject, body, attachments
@@ -63,13 +64,17 @@ public class TicketController {
             this.author = author;
         }
 
+        public String getDescription() {return description;}
+
+        public void setDescription(String description) {this.description = description;}
+
         public float getPrice() {return price;}
 
         public void setPrice(float price) {this.price = price;}
 
-        public String getDescription() {return description;}
+        public boolean getAvailability() {return availability;}
 
-        public void setDescription(String description) {this.description = description;}
+        public void setAvailability(boolean availability) {this.availability = availability;}
 
         public MultipartFile getAttachments() {
             return attachments;
@@ -89,8 +94,8 @@ public class TicketController {
         }
         form.setAttachments(attachments);
         long ticketId = tService.createTicket(form.getBookName(),
-                form.getAuthor(), form.getPrice(),
-                form.getDescription(),  form.getAttachments());
+                form.getAuthor(), form.getDescription(), form.getPrice(),
+                form.getAvailability(), form.getAttachments());
         return new RedirectView("/ticket/view/" + ticketId, true);
     }
 
@@ -101,6 +106,7 @@ public class TicketController {
         Ticket ticket = tService.getTicket(ticketId);
         model.addAttribute("ticketId", ticketId);
         model.addAttribute("ticket", ticket);
+        model.addAttribute("availability", ticket.getAvailability());
         return "view";
     }
 

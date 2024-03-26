@@ -1,3 +1,4 @@
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,6 +15,9 @@
     <form:input type="number" step="0.01" path="price"/><br/><br/>
     <form:label path="description">Description</form:label><br/>
     <form:textarea type="text" path="description" rows="5" cols="30"/><br/><br/>
+    <form:label path="availability">Availability</form:label>
+    <form:checkbox path="availability"/><br/><br/>
+
     <%--<form:label path="comments"></form:label>
     <form:hidden path="comments"/>--%>
     <%--<form:label path="comment">Comment</form:label><br/>

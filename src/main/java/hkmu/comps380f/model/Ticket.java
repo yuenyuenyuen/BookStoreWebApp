@@ -17,6 +17,7 @@ public class Ticket {
     private String author;
     private String description;
     private float price;
+    private boolean availability = false;
 
     @OneToMany(mappedBy = "ticket", fetch = FetchType.EAGER,
             cascade = CascadeType.ALL, orphanRemoval = true)
@@ -58,6 +59,10 @@ public class Ticket {
     public float getPrice() {return price;}
 
     public void setPrice(float price) {this.price = price;}
+
+    public boolean getAvailability() {return availability;}
+
+    public void setAvailability(boolean availability) {this.availability = availability;}
 
     public List<Comment> getComments() {return comments;}
 

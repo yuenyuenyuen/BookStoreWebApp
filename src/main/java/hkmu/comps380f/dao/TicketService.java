@@ -71,7 +71,7 @@ public class TicketService {
         throw new AttachmentNotFound(attachmentId);
     }
     @Transactional
-    public long createTicket(String bookName, String author, Float price, String description, MultipartFile attachments)
+    public long createTicket(String bookName, String author, String description, Float price, boolean availability, MultipartFile attachments)
             throws IOException, InvalidFileFormatException {
         if (attachments != null && !attachments.isEmpty()) {
             String contentType = attachments.getContentType();
@@ -82,8 +82,9 @@ public class TicketService {
         Ticket ticket = new Ticket();
         ticket.setBookName(bookName);
         ticket.setAuthor(author);
-        ticket.setPrice(price);
         ticket.setDescription(description);
+        ticket.setPrice(price);
+        ticket.setAvailability(availability);
         ticket.setComments(new ArrayList<>());
         if (attachments != null && !attachments.isEmpty()) {
             Attachment attachment = new Attachment();
