@@ -110,6 +110,32 @@ public class TicketController {
         return "view";
     }
 
+    @GetMapping("/{id}/edit")
+    public ModelAndView edit(@PathVariable("id") long ticketId) throws TicketNotFound {
+        Ticket ticket = tService.getTicket(ticketId);
+        Form form = new Form();
+        form.setBookName(ticket.getBookName());
+        form.setAuthor(ticket.getAuthor());
+        form.setDescription(ticket.getDescription());
+        form.setPrice(ticket.getPrice());
+        form.setAvailability(ticket.getAvailability());
+        return new ModelAndView("edit", "ticketForm", form);
+    }
+
+    @PostMapping("/{id}/edit")
+    public View update(@PathVariable("id") long ticketId, @Validated Form form, @RequestParam("attachments") MultipartFile attachments, BindingResult bindingResult) throws IOException, InvalidFileFormatException, TicketNotFound {
+        // Validate the form data
+        if (bindingResult.hasErrors()) {
+            // Handle validation errors
+            return new RedirectView("/{id}/edit");
+        }
+        form.setAttachments(attachments);
+        tService.updateTicket(ticketId, form.getBookName(),
+                form.getAuthor(), form.getDescription(), form.getPrice(),
+                form.getAvailability(), form.getAttachments());
+        return new RedirectView("/ticket/view/" + ticketId, true);
+    }
+
     @GetMapping("/{ticketId}/attachment/{attachment:.+}")
     public View download(@PathVariable("ticketId") long ticketId,
                          @PathVariable("attachment") UUID attachmentId)

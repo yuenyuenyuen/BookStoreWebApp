@@ -96,4 +96,34 @@ public class TicketService {
         Ticket savedTicket = tRepo.save(ticket);
         return savedTicket.getId();
     }
+
+    @Transactional
+    public void updateTicket(long ticketId, String bookName, String author, String description, Float price, boolean availability, MultipartFile attachments)
+            throws IOException, InvalidFileFormatException, TicketNotFound {
+        Ticket ticket = tRepo.findById(ticketId)
+                .orElseThrow(() -> new TicketNotFound(ticketId));
+
+        if (attachments != null && !attachments.isEmpty()) {
+            String contentType = attachments.getContentType();
+            if (contentType == null || (!contentType.equals("image/jpeg") && !contentType.equals("image/png"))) {
+                throw new InvalidFileFormatException("Only JPG and PNG files are allowed.");
+            }
+        }
+
+        ticket.setBookName(bookName);
+        ticket.setAuthor(author);
+        ticket.setDescription(description);
+        ticket.setPrice(price);
+        ticket.setAvailability(availability);
+
+        if (attachments != null && !attachments.isEmpty()) {
+            Attachment attachment = new Attachment();
+            attachment.setName(attachments.getOriginalFilename());
+            attachment.setContents(attachments.getBytes());
+            attachment.setTicket(ticket);
+            ticket.setAttachments(attachment);
+        }
+
+        tRepo.save(ticket);
+    }
 }
