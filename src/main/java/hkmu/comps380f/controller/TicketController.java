@@ -5,6 +5,7 @@ import hkmu.comps380f.exception.AttachmentNotFound;
 import hkmu.comps380f.exception.InvalidFileFormatException;
 import hkmu.comps380f.exception.TicketNotFound;
 import hkmu.comps380f.model.Attachment;
+import hkmu.comps380f.model.Comment;
 import hkmu.comps380f.model.Ticket;
 import hkmu.comps380f.view.DownloadingView;
 import jakarta.annotation.Resource;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -27,6 +29,26 @@ public class TicketController {
     @Resource
     private TicketService tService;
 
+    public class commentForm{
+        private String name;
+        private String content;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+    }
     // Controller methods, Form-backing object, ...
     @GetMapping(value = {"", "/list"})
     public String list(ModelMap model) {
@@ -45,6 +67,7 @@ public class TicketController {
         private String description;
         private float price;
         private boolean availability;
+        private List<Comment> comments;
         private MultipartFile attachments;
 
         // Getters and Setters of customerName, subject, body, attachments
@@ -76,6 +99,10 @@ public class TicketController {
 
         public void setAvailability(boolean availability) {this.availability = availability;}
 
+        public List<Comment> getComments() {return comments;}
+
+        public void setComments(List<Comment> comments) {this.comments = comments;}
+
         public MultipartFile getAttachments() {
             return attachments;
         }
@@ -100,14 +127,37 @@ public class TicketController {
     }
 
     @GetMapping("/view/{ticketId}")
-    public String view(@PathVariable("ticketId") long ticketId,
+    public ModelAndView view(@PathVariable("ticketId") long ticketId,
                        ModelMap model)
             throws TicketNotFound {
         Ticket ticket = tService.getTicket(ticketId);
+        commentForm commentForm = new commentForm();
         model.addAttribute("ticketId", ticketId);
         model.addAttribute("ticket", ticket);
+        model.addAttribute("commentForm", commentForm);
         model.addAttribute("availability", ticket.getAvailability());
-        return "view";
+        return new ModelAndView("view", "commentForm", commentForm);
+    }
+
+    @PostMapping("/view/{ticketId}")
+    public View addComment(@PathVariable("ticketId") long ticketId, @Validated commentForm form, @RequestParam("name") String name, @RequestParam("content") String content) throws TicketNotFound, InvalidFileFormatException, IOException {
+
+        // Extract the comment from the commentForm
+
+        // Retrieve the ticket from the data store or service
+        Ticket ticket = tService.getTicket(ticketId);
+        // Add the new comment to the ticket's comment list
+        Comment newcomment = new Comment();
+        newcomment.setContent(content);
+        newcomment.setName(name);
+        newcomment.setTicket(ticket);
+        List<Comment> newcommentlist = ticket.getComments();
+        newcommentlist.add(newcomment);
+        // Perform the necessary actions to update the ticket in your data store or service
+        tService.addComment(ticketId, newcommentlist);
+
+        // Redirect back to the ticket details page
+        return new RedirectView("/ticket/view/" + ticketId, true);
     }
 
     @GetMapping("/{id}/edit")
@@ -132,7 +182,7 @@ public class TicketController {
         form.setAttachments(attachments);
         tService.updateTicket(ticketId, form.getBookName(),
                 form.getAuthor(), form.getDescription(), form.getPrice(),
-                form.getAvailability(), form.getAttachments());
+                form.getAvailability(), form.getComments(), form.getAttachments());
         return new RedirectView("/ticket/view/" + ticketId, true);
     }
 

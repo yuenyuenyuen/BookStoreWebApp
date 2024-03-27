@@ -4,6 +4,7 @@ import hkmu.comps380f.exception.AttachmentNotFound;
 import hkmu.comps380f.exception.InvalidFileFormatException;
 import hkmu.comps380f.exception.TicketNotFound;
 import hkmu.comps380f.model.Attachment;
+import hkmu.comps380f.model.Comment;
 import hkmu.comps380f.model.Ticket;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -98,7 +99,7 @@ public class TicketService {
     }
 
     @Transactional
-    public void updateTicket(long ticketId, String bookName, String author, String description, Float price, boolean availability, MultipartFile attachments)
+    public void updateTicket(long ticketId, String bookName, String author, String description, Float price, boolean availability, List<Comment> comment, MultipartFile attachments)
             throws IOException, InvalidFileFormatException, TicketNotFound {
         Ticket ticket = tRepo.findById(ticketId)
                 .orElseThrow(() -> new TicketNotFound(ticketId));
@@ -115,6 +116,7 @@ public class TicketService {
         ticket.setDescription(description);
         ticket.setPrice(price);
         ticket.setAvailability(availability);
+        ticket.setComments(comment);
 
         if (attachments != null && !attachments.isEmpty()) {
             Attachment attachment = new Attachment();
@@ -123,6 +125,17 @@ public class TicketService {
             attachment.setTicket(ticket);
             ticket.setAttachments(attachment);
         }
+
+        tRepo.save(ticket);
+    }
+
+    @Transactional
+    public void addComment(long ticketId, List<Comment> comment)
+            throws IOException, InvalidFileFormatException, TicketNotFound {
+        Ticket ticket = tRepo.findById(ticketId)
+                .orElseThrow(() -> new TicketNotFound(ticketId));
+
+        ticket.setComments(comment);
 
         tRepo.save(ticket);
     }

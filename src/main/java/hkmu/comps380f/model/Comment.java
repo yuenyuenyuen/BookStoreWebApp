@@ -2,6 +2,8 @@ package hkmu.comps380f.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 public class Comment {
     @Id
@@ -10,7 +12,7 @@ public class Comment {
     @Column(name = "username")
     private String name;
     @Column(name = "cmContent")
-    private String Content;
+    private String content;
 
     @Column(name = "ticket_id", insertable=false, updatable=false)
     private long ticketId;
@@ -35,11 +37,11 @@ public class Comment {
     }
 
     public String getContent() {
-        return Content;
+        return content;
     }
 
-    public void setContent(String Content) {
-        this.Content = Content;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public long getTicketId() {
