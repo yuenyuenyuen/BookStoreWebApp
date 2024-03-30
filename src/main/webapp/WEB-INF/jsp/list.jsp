@@ -10,6 +10,11 @@
     [<a href="<c:url value="/login" />">Login</a>]
 </security:authorize>
 <security:authorize access="hasAnyRole('ADMIN', 'USER')">
+    [<a href="<c:url value="/user/userinfo"/>">User Info</a>]
+    &nbsp;
+</security:authorize>
+<br/>
+<security:authorize access="hasAnyRole('ADMIN', 'USER')">
 <c:url var="logoutUrl" value="/logout"/>
 <form action="${logoutUrl}" method="post">
     <input type="submit" value="Log out" />

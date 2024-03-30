@@ -52,7 +52,7 @@ public class TicketController {
     }
     // Controller methods, Form-backing object, ...
     @GetMapping(value = {"", "/list"})
-    public String list(ModelMap model) {
+    public String list(ModelMap model, Principal principal) {
         model.addAttribute("ticketDatabase", tService.getTickets());
         return "list";
     }
