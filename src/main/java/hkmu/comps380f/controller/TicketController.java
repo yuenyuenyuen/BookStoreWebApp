@@ -20,6 +20,7 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -113,7 +114,7 @@ public class TicketController {
     }
 
     @PostMapping("/create")
-    public View create(@Validated Form form, @RequestParam("attachments") MultipartFile attachments, BindingResult bindingResult) throws IOException, InvalidFileFormatException {
+    public View create(@Validated Form form, Principal principal, @RequestParam("attachments") MultipartFile attachments, BindingResult bindingResult) throws IOException, InvalidFileFormatException {
         // Validate the form data
         if (bindingResult.hasErrors()) {
             // Handle validation errors
@@ -127,7 +128,7 @@ public class TicketController {
     }
 
     @GetMapping("/view/{ticketId}")
-    public ModelAndView view(@PathVariable("ticketId") long ticketId,
+    public ModelAndView view(@PathVariable("ticketId") long ticketId, Principal principal,
                        ModelMap model)
             throws TicketNotFound {
         Ticket ticket = tService.getTicket(ticketId);
@@ -140,7 +141,7 @@ public class TicketController {
     }
 
     @PostMapping("/view/{ticketId}")
-    public View addComment(@PathVariable("ticketId") long ticketId, @Validated commentForm form, @RequestParam("name") String name, @RequestParam("content") String content) throws TicketNotFound, InvalidFileFormatException, IOException {
+    public View addComment(@PathVariable("ticketId") long ticketId, @Validated commentForm form, Principal principal, @RequestParam("name") String name, @RequestParam("content") String content) throws TicketNotFound, InvalidFileFormatException, IOException {
 
         // Extract the comment from the commentForm
 
@@ -179,10 +180,19 @@ public class TicketController {
             // Handle validation errors
             return new RedirectView("/{id}/edit");
         }
+        Ticket ticket = tService.getTicket(ticketId);
         form.setAttachments(attachments);
         tService.updateTicket(ticketId, form.getBookName(),
                 form.getAuthor(), form.getDescription(), form.getPrice(),
-                form.getAvailability(), form.getComments(), form.getAttachments());
+                form.getAvailability(), ticket.getComments(), form.getAttachments());
+        return new RedirectView("/ticket/view/" + ticketId, true);
+    }
+
+    @GetMapping("/delete/comment/{ticketId}/{commentId}")
+    public View deleteComment(@PathVariable("ticketId") long ticketId, @PathVariable("commentId") long commentId) throws TicketNotFound, AttachmentNotFound {
+
+        tService.deleteComment(ticketId, commentId);
+
         return new RedirectView("/ticket/view/" + ticketId, true);
     }
 

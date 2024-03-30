@@ -17,7 +17,6 @@
     <form:textarea type="text" path="description" rows="5" cols="30"/><br/><br/>
     <form:label path="availability">Availability</form:label>
     <form:checkbox path="availability"/><br/><br/>
-
     <b>Attachments</b><br/>
     <input type="file" name="attachments" multiple="multiple"/><br/><br/>
     <input type="submit" value="Update"/>

@@ -139,4 +139,19 @@ public class TicketService {
 
         tRepo.save(ticket);
     }
+    @Transactional
+    public void deleteComment(long ticketId, long commentId)
+            throws TicketNotFound, AttachmentNotFound {
+        Ticket ticket = tRepo.findById(ticketId).orElse(null);
+        if (ticket == null) {
+            throw new TicketNotFound(ticketId);
+        }
+        for (Comment comment : ticket.getComments()) {
+            if (comment.getId() == commentId) {
+                ticket.deleteComment(comment);
+                tRepo.save(ticket);
+                return;
+            }
+        }
+    }
 }

@@ -13,7 +13,9 @@ Author - <c:out value="${ticket.author}"/><br/><br/>
     <a href="<c:url value="/ticket/${ticketId}/attachment/${ticket.attachments.id}" />">
         <c:out value="${ticket.attachments.name}" /></a><br/>
     <img src="<c:url value='/ticket/${ticketId}/attachment/${ticket.attachments.id}' />" alt="Attachment" style="max-width: 500px; max-height: 500px;"><br/>
+    <security:authorize access="hasRole('ADMIN')">
     [<a href="<c:url value="/ticket/${ticketId}/delete/${ticket.attachments.id}" />">Delete</a>]<br/><br/>
+    </security:authorize>
 </c:if>
 Description: <c:out value="${ticket.description}"/></br></br>
 Price: <c:out value="${ticket.price}"/></br></br>
@@ -23,26 +25,31 @@ Comment:</br></br>
 <c:when test="${fn:length(ticket.comments) > 0}">
 <c:forEach var="cm" items="${ticket.comments}">
 User: <c:out value="${cm.name}"/><br/>
-<c:out value="${cm.content}"/><br/><br/>
+<c:out value="${cm.content}"/><br/>
+    <security:authorize access="hasRole('ADMIN')">
+        [<a href="<c:url value="/ticket/delete/comment/${ticket.id}/${cm.id}" />">Delete</a>]<br/><br/>
+</security:authorize>
 </c:forEach>
 </c:when>
 <c:otherwise>
     There are no comment.<br/><br/>
 </c:otherwise>
 </c:choose>
-<form:form method="POST" enctype="multipart/form-data" modelAttribute="commentForm">
-    <form:label path="name">User Name</form:label><br/>
-    <form:input type="text" path="name"/><br/><br/>
-    <form:label path="content">Comment</form:label><br/>
-    <form:textarea path="content" rows="5" cols="30"/><br/><br/>
-    <input type="hidden" name="ticketId" value="${ticketId}"/>
-    <input type="submit" value="Add Comment"/>
-</form:form><br/><br/>
-
+<security:authorize access="hasAnyRole('ADMIN', 'USER')">
+    <form:form method="POST" enctype="multipart/form-data" modelAttribute="commentForm">
+        <form:hidden path="name" value="<%=request.getUserPrincipal().getName()%>"/><br/><br/>
+        <form:label path="content">Comment</form:label><br/>
+        <form:textarea path="content" rows="5" cols="30"/><br/><br/>
+        <input type="hidden" name="ticketId" value="${ticketId}"/>
+        <input type="submit" value="Add Comment"/>
+    </form:form><br/><br/>
+</security:authorize>
+<security:authorize access="hasRole('ADMIN')">
 [<a href="<c:url value="/ticket/delete/${ticket.id}" />">Delete</a>]
 &nbsp;&nbsp;
 [<a href="<c:url value='/ticket/${ticket.id}/edit' />">Edit Book</a>]
-&nbsp;&nbsp;
+    &nbsp;
+</security:authorize>
 [<a href="<c:url value="/ticket" />">Back to book list</a>]
 </body>
 </html>

@@ -68,7 +68,10 @@ public class Ticket {
 
     public void setComments(List<Comment> comments) {this.comments = comments;}
 
-    public void deleteComment(Comment comments) {this.comments.remove(comments);}
+    public void deleteComment(Comment comment) {
+        comments.remove(comment);
+        comment.setTicket(null);
+    }
 
     public Attachment getAttachments() {return attachments;}
 
@@ -85,7 +88,9 @@ public class Ticket {
     }
 
     public void deleteAttachment(Attachment attachment) {
-        attachment.setTicket(null);
-        this.attachments= null;
+        if (this.attachments != null && this.attachments.equals(attachment)) {
+            this.attachments = null;
+            attachment.setTicket(null);
+        }
     }
 }
