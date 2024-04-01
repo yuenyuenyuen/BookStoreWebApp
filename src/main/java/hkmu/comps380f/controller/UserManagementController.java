@@ -121,6 +121,30 @@ public class UserManagementController {
                 form.getAddress(), form.getRoles());
         return "redirect:/login";
     }
+    @GetMapping("/userinfo/{userName}")
+    public ModelAndView editInfoWithId(@PathVariable("userName") String userName, Model model, Form form, Principal principal) {
+        TicketUser ticketUser = umService.getTicketUser(userName);
+        form.setUsername(ticketUser.getUsername());
+        form.setPassword(ticketUser.getPassword());
+        form.setFullName(ticketUser.getFullName());
+        form.setEmail(ticketUser.getEmail());
+        form.setAddress(ticketUser.getAddress());
+        List<UserRole> userRoleList = ticketUser.getRoles();
+        String[] passRole = new String[userRoleList.size()];
+        for(int i = 0; i < userRoleList.size(); i++){
+            passRole[i] = userRoleList.get(i).getRole();
+        }
+        form.setRoles(passRole);
+        model.addAttribute("ticketUser", form);
+        return new ModelAndView("editInfo", "ticketUser", form);
+    }
+    @PostMapping("/userinfo/{userName}")
+    public String editInfoWithId(Form form) throws IOException {
+        umService.updateTicketUser(form.getUsername(),
+                form.getPassword(), form.getFullName(), form.getEmail(),
+                form.getAddress(), form.getRoles());
+        return "redirect:/login";
+    }
 
     @GetMapping("/delete/{username}")
     public String deleteTicket(@PathVariable("username") String username) {
