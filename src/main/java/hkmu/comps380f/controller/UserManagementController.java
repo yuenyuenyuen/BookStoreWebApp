@@ -101,7 +101,7 @@ public class UserManagementController {
         String username = principal.getName();
         TicketUser ticketUser = umService.getTicketUser(username);
         form.setUsername(ticketUser.getUsername());
-        form.setPassword(ticketUser.getPassword());
+        form.setPassword(ticketUser.getPassword().replace("{noop}", ""));
         form.setFullName(ticketUser.getFullName());
         form.setEmail(ticketUser.getEmail());
         form.setAddress(ticketUser.getAddress());
@@ -117,7 +117,7 @@ public class UserManagementController {
     @PostMapping("/userinfo")
     public String editInfo(Form form) throws IOException {
         umService.updateTicketUser(form.getUsername(),
-                form.getPassword(), form.getFullName(), form.getEmail(),
+                "{noop}" + form.getPassword(), form.getFullName(), form.getEmail(),
                 form.getAddress(), form.getRoles());
         return "redirect:/login";
     }
@@ -125,7 +125,7 @@ public class UserManagementController {
     public ModelAndView editInfoWithId(@PathVariable("userName") String userName, Model model, Form form, Principal principal) {
         TicketUser ticketUser = umService.getTicketUser(userName);
         form.setUsername(ticketUser.getUsername());
-        form.setPassword(ticketUser.getPassword());
+        form.setPassword(ticketUser.getPassword().replace("{noop}", ""));
         form.setFullName(ticketUser.getFullName());
         form.setEmail(ticketUser.getEmail());
         form.setAddress(ticketUser.getAddress());
@@ -141,7 +141,7 @@ public class UserManagementController {
     @PostMapping("/userinfo/{userName}")
     public String editInfoWithId(Form form) throws IOException {
         umService.updateTicketUser(form.getUsername(),
-                form.getPassword(), form.getFullName(), form.getEmail(),
+                "{noop}" + form.getPassword(), form.getFullName(), form.getEmail(),
                 form.getAddress(), form.getRoles());
         return "redirect:/login";
     }

@@ -16,7 +16,7 @@
     <form:input type="text" path="address"/><br/><br/>
     <form:hidden path="roles" value="ROLE_USER"/>
     <br/><br/>
-    <input type="submit" value="Update"/>
+    <input type="submit" value="Register"/>
 </form:form>
 </body>
 </html>

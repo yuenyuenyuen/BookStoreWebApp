@@ -18,7 +18,7 @@
     <form:checkbox path="roles" value="ROLE_USER"/>ROLE_USER
     <form:checkbox path="roles" value="ROLE_ADMIN"/>ROLE_ADMIN
     <br/><br/>
-    <input type="submit" value="Register"/>
+    <input type="submit" value="Update"/>
 </form:form>
 </body>
 </html>
