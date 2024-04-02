@@ -35,7 +35,7 @@
                     </td>
                     <td>
                         [<a href="<c:url value="/user/delete/${user.username}" />">Delete</a>]
-                    </td>
+                    </td>Register
                 </tr>
             </c:forEach>
         </table>
