@@ -9,6 +9,8 @@ import hkmu.comps380f.model.Comment;
 import hkmu.comps380f.model.Ticket;
 import hkmu.comps380f.view.DownloadingView;
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -141,7 +143,9 @@ public class TicketController {
     }
 
     @PostMapping("/view/{ticketId}")
-    public View addComment(@PathVariable("ticketId") long ticketId, @Validated commentForm form, Principal principal, @RequestParam("name") String name, @RequestParam("content") String content) throws TicketNotFound, InvalidFileFormatException, IOException {
+    public View addComment(@PathVariable("ticketId") long ticketId, @Validated commentForm form,
+                           Principal principal, @RequestParam("name") String name,
+                           @RequestParam("content") String content) throws TicketNotFound, InvalidFileFormatException, IOException {
 
         // Extract the comment from the commentForm
 
@@ -160,6 +164,34 @@ public class TicketController {
         // Redirect back to the ticket details page
         return new RedirectView("/ticket/view/" + ticketId, true);
     }
+
+
+
+//    @GetMapping("/history/{ticketId}")
+//    public ModelAndView history(@PathVariable("ticketId") long ticketId, Principal principal,
+//                             ModelMap model)
+//            throws TicketNotFound {
+//        Ticket ticket = tService.getTicket(ticketId);
+//        commentForm commentForm = new commentForm();
+//        model.addAttribute("ticketId", ticketId);
+//        model.addAttribute("ticket", ticket);
+//        model.addAttribute("commentForm", commentForm);
+//        model.addAttribute("availability", ticket.getAvailability());
+//        return new ModelAndView("history", "commentForm", commentForm);
+//    }
+    @GetMapping("/history/all")
+    public ModelAndView history(Principal principal, ModelMap model) throws TicketNotFound {
+        ModelAndView modelAndView = new ModelAndView("history");
+
+        List<Ticket> tickets = tService.getTickets(); // Get all tickets
+
+        model.addAttribute("tickets", tickets);
+        model.addAttribute("commentForm", new commentForm());
+
+        return modelAndView;
+    }
+
+
 
     @GetMapping("/{id}/edit")
     public ModelAndView edit(@PathVariable("id") long ticketId) throws TicketNotFound {
