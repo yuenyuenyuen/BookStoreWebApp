@@ -256,4 +256,31 @@ public class TicketController {
     public ModelAndView error(Exception e) {
         return new ModelAndView("error", "message", e.getMessage());
     }
+     @GetMapping ("/favorite/{ticketId}")
+    public String addFavorites(@PathVariable("ticketId")long ticketId) throws TicketNotFound{
+        Ticket ticket = tService.getTicket(ticketId);
+        return "redirect:/favorite";
+    }
+
+    @PostMapping("/favorite/{ticketId}")
+    public String addFavorite(@PathVariable("ticketId") long ticketId, ModelMap model) throws TicketNotFound{
+        Ticket ticket = tService.getTicket(ticketId);
+        Favorite favorite = new Favorite();
+        favorite.setTicket(ticket);
+        tService.addFavorite(favorite);
+        return "redirect:/favorite";
+    }
+    @GetMapping("/favorite/remove/{favoriteId}")
+    public String removeFavorite(@PathVariable("favoriteId")long favoriteId) throws FavoriteNotFound{
+        tService.removeFavorite(favoriteId);
+        return "redirect:/favorite";
+    }
+    @GetMapping("/favorite/all")
+    public ModelAndView favorite(Principal principal, ModelMap model) throws TicketNotFound {
+        ModelAndView modelAndView = new ModelAndView("favorite");
+
+        List<Ticket> favoriteTickets = tService.getFavoriteTickets(); // Get favorite tickets
+        model.addAttribute("favoriteTickets", favoriteTickets);
+        return modelAndView;
+    }
 }
