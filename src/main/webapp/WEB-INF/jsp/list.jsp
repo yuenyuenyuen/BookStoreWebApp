@@ -15,18 +15,27 @@
 </security:authorize>
 <br/>
 <security:authorize access="hasAnyRole('ADMIN', 'USER')">
-<c:url var="logoutUrl" value="/logout"/>
-<form action="${logoutUrl}" method="post">
-    <input type="submit" value="Log out" />
-    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-</form>
+    <c:url var="logoutUrl" value="/logout"/>
+    <form action="${logoutUrl}" method="post">
+        <input type="submit" value="Log out" />
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+    </form>
 </security:authorize>
 <h2>Book Store</h2>
+<a href="<c:url value="/ticket/history/all" />">View Comments History</a><br/><br/>
+
+<c:forEach items="${ticketDatabase}" var="entry">
+    <form action="<c:url value='/ticket/favorite/${entry.id}' />" method="POST">
+        <input type="submit" value="Add to Favorites">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+    </form>
+</c:forEach>
+
 <security:authorize access="hasRole('ADMIN')">
     <a href="<c:url value="/user" />">Manage User Accounts</a><br/><br/>
 </security:authorize>
 <security:authorize access="hasRole('ADMIN')">
-<a href="<c:url value="/ticket/create" />">Create a Ticket</a><br/><br/>
+    <a href="<c:url value="/ticket/create" />">Create a Ticket</a><br/><br/>
 </security:authorize>
 <c:choose>
     <c:when test="${fn:length(ticketDatabase) == 0}">
@@ -35,7 +44,7 @@
     <c:otherwise>
         <c:forEach items="${ticketDatabase}" var="entry">
             <c:if test="${entry.attachments != null}">
-            <img src="<c:url value='/ticket/${entry.id}/attachment/${entry.attachments.id}' />" alt="Attachment" style="max-width: 200px; max-height: 200px;"><br/>
+                <img src="<c:url value='/ticket/${entry.id}/attachment/${entry.attachments.id}' />" alt="Attachment" style="max-width: 200px; max-height: 200px;"><br/>
             </c:if>
             Book ${entry.id}:
             <a href="<c:url value="/ticket/view/${entry.id}" />">
