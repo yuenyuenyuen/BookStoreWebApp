@@ -26,3 +26,11 @@ CREATE TABLE IF NOT EXISTS user_roles (
     PRIMARY KEY (user_role_id),
     FOREIGN KEY (username) REFERENCES users(username)
     );
+
+CREATE TABLE IF NOT EXISTS favorite_tickets (
+    user_username VARCHAR(50) NOT NULL,
+    ticket_id BIGINT NOT NULL,
+    PRIMARY KEY (user_username, ticket_id),
+    FOREIGN KEY (user_username) REFERENCES users(username),
+    FOREIGN KEY (ticket_id) REFERENCES ticket(id)
+    );
