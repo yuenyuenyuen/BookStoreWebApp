@@ -154,4 +154,27 @@ public class TicketService {
             }
         }
     }
+    @Transactional
+    public void addFavorite(Favorite favorite) {
+        favoriteRepository.save(favorite);
+    }
+
+    @Transactional
+    public void removeFavorite(long favoriteId) throws FavoriteNotFound {
+        Favorite favorite = favoriteRepository.findById(favoriteId).orElse(null);
+        if (favorite == null) {
+            throw new FavoriteNotFound(favoriteId);
+        }
+        favoriteRepository.delete(favorite);
+    }
+
+    @Transactional
+    public List<Ticket> getFavoriteTickets() {
+        List<Favorite> favorites = favoriteRepository.findAll();
+        List<Ticket> favoriteTickets = new ArrayList<>();
+        for (Favorite favorite : favorites) {
+            favoriteTickets.add(favorite.getTicket());
+        }
+        return favoriteTickets;
+    }
 }
