@@ -160,7 +160,9 @@ public class TicketController {
         model.addAttribute("ticket", ticket);
         model.addAttribute("commentForm", commentForm);
         model.addAttribute("availability", ticket.getAvailability());
-        model.addAttribute("isFavorite", favService.isFavorite(ticketId, principal.getName()));
+        if (principal != null) {
+            model.addAttribute("isFavorite", favService.isFavorite(ticketId, principal.getName()));
+        }
         return new ModelAndView("view", "commentForm", commentForm);
     }
 

@@ -52,28 +52,30 @@ Comment:</br></br>
     &nbsp;
 </security:authorize>
 
-<c:choose>
-    <c:when test="${isFavorite}">
-        <span>This book is already in your favorites.</span>
-        <form action="<c:url value='/favorite/remove/${ticket.id}' />" method="GET">
-            <input type="submit" value="Remove from Favorites">
-        </form>
-    </c:when>
-    <c:otherwise>
-        <form action="<c:url value='/favorite/${ticket.id}' />" method="POST">
-            <input type="submit" value="Add to Favorites">
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-        </form>
-    </c:otherwise>
-</c:choose>
+<security:authorize access="hasAnyRole('ADMIN', 'USER')">
+    <c:choose>
+        <c:when test="${isFavorite}">
+            <span>This book is already in your favorites.</span>
+            <form action="<c:url value='/favorite/remove/${ticket.id}' />" method="GET">
+                <input type="submit" value="Remove from Favorites">
+            </form>
+        </c:when>
+        <c:otherwise>
+            <form action="<c:url value='/favorite/${ticket.id}' />" method="POST">
+                <input type="submit" value="Add to Favorites">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            </form>
+        </c:otherwise>
+    </c:choose>
 
-<form action="<c:url value='/cart/add/${ticket.id}' />" method="POST">
-    <label for="quantity">Quantity:</label>
-    <input type="number" id="quantity" name="quantity" min="1" value="1">
-    <input type="hidden" name="ticketId" value="${ticket.id}">
-    <input type="submit" value="Add to Cart">
-    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-</form>
+    <form action="<c:url value='/cart/add/${ticket.id}' />" method="POST">
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" name="quantity" min="1" value="1">
+        <input type="hidden" name="ticketId" value="${ticket.id}">
+        <input type="submit" value="Add to Cart">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+    </form>
+</security:authorize>
 
 [<a href="<c:url value="/ticket/list" />">Back to book list</a>]
 </body>
