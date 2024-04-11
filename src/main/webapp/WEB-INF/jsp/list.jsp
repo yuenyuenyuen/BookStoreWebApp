@@ -15,6 +15,7 @@
     &nbsp;
 </security:authorize>
 [<a href="<c:url value="/favorite/all"/>">View Favorites</a>]
+[<a href="<c:url value="/cart/view"/>">View Cart</a>]
 <br/>
 <security:authorize access="hasAnyRole('ADMIN', 'USER')">
     <c:url var="logoutUrl" value="/logout"/>

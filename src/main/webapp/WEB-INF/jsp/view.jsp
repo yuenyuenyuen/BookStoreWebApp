@@ -67,6 +67,14 @@ Comment:</br></br>
     </c:otherwise>
 </c:choose>
 
+<form action="<c:url value='/cart/add/${ticket.id}' />" method="POST">
+    <label for="quantity">Quantity:</label>
+    <input type="number" id="quantity" name="quantity" min="1" value="1">
+    <input type="hidden" name="ticketId" value="${ticket.id}">
+    <input type="submit" value="Add to Cart">
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+</form>
+
 [<a href="<c:url value="/ticket/list" />">Back to book list</a>]
 </body>
 </html>
