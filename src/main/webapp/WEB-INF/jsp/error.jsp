@@ -1,23 +1,30 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ include file="header.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Customer Support</title>
+    <%@ include file="meta.jsp" %>
+    <title>Error page</title>
 </head>
 <body>
-<h2>Error page</h2>
-<c:choose>
-    <c:when test="${empty message}">
-        <p>Something went wrong.</p>
-        <ul>
-            <li>Status Code: ${status}</li>
-            <li>Exception: ${exception}</li>
-            <li>Stacktrace: ${trace}</li>
-        </ul>
-    </c:when>
-    <c:otherwise>
-        <p>${message}</p>
-    </c:otherwise>
-</c:choose>
-<a href="<c:url value="/ticket" />">Return to book list</a>
+<div class="container">
+    <h2>Error</h2>
+    <a href="<c:url value="/ticket" />" class="btn btn-primary">Return to book list</a>
+    <c:choose>
+        <c:when test="${empty message}">
+            <div class="alert alert-danger" role="alert">
+                Something went wrong.
+                <ul>
+                    <li>Status Code: ${status}</li>
+                    <li>Exception: ${exception}</li>
+                    <li>Stacktrace: ${trace}</li>
+                </ul>
+            </div>
+        </c:when>
+        <c:otherwise>
+            <div class="alert alert-danger" role="alert">${message}</div>
+        </c:otherwise>
+    </c:choose>
+</div>
 </body>
 </html>
