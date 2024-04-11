@@ -5,9 +5,8 @@
 </head>
 <body>
 <h2>Shopping Cart</h2>
-${cart}
 <c:if test="${cart.totalItems ==0}">
-    <p>Your cart is empty.</p>
+    <p>Your cart is empty. Please add items to proceed to checkout.</p>
 </c:if>
 <c:if test="${cart.totalItems > 0}">
     <table border="1">
@@ -20,7 +19,6 @@ ${cart}
             <th>Action</th>
         </tr>
         <c:forEach items="${cart.items}" var="entry">
-            Book ${entry.key}
             <c:set var="quantity" value="${entry.value}"/>
             <c:set var="ticket" value="${ticketService.getTicket(entry.key)}"/>
             <tr>

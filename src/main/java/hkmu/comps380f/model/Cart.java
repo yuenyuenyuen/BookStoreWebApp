@@ -1,12 +1,17 @@
 package hkmu.comps380f.model;
 
+import hkmu.comps380f.dao.CartService;
+import hkmu.comps380f.dao.TicketRepository;
+import hkmu.comps380f.dao.TicketService;
+import hkmu.comps380f.exception.TicketNotFound;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class ShoppingCart {
+public class Cart {
     private Map<Long, Integer> items; // Map of Ticket ID to Quantity
 
-    public ShoppingCart() {
+    public Cart() {
         this.items = new HashMap<>();
     }
 

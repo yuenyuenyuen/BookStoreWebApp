@@ -92,4 +92,12 @@ public class TicketUser {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    public Set<Favorite> getFavorites() {
+        return favorites;
+    }
+
+    public void setFavorites(Set<Favorite> favorites) {
+        this.favorites = favorites;
+    }
 }

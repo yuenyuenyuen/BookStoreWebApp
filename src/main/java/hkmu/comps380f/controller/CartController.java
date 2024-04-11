@@ -2,7 +2,7 @@ package hkmu.comps380f.controller;
 
 import hkmu.comps380f.dao.TicketService;
 import hkmu.comps380f.exception.TicketNotFound;
-import hkmu.comps380f.model.ShoppingCart;
+import hkmu.comps380f.model.Cart;
 import hkmu.comps380f.model.Ticket;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
@@ -14,7 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/cart")
-public class ShoppingCartController {
+public class CartController {
     @Resource
     private TicketService tService;
 
@@ -23,23 +23,22 @@ public class ShoppingCartController {
 
     @GetMapping("/view")
     public ModelAndView viewCart(HttpSession session,ModelMap model) {
-        ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");
+        Cart cart = (Cart) session.getAttribute("cart");
         if (cart == null) {
-            cart = new ShoppingCart();
+            cart = new Cart();
         }
-//        ModelMap modelMap = new ModelMap();
         model.addAttribute("cart", cart);
         model.addAttribute("ticketService", ticketService);
-        return new ModelAndView("viewCart", model);
+        return new ModelAndView("cart", model);
     }
 
     @PostMapping("/add/{ticketId}")
     public String addToCart(@PathVariable long ticketId, @RequestParam(value = "quantity", defaultValue = "1") int quantity, HttpSession session) throws TicketNotFound {
         Ticket ticket = tService.getTicket(ticketId);
         if (ticket != null) {
-            ShoppingCart cart= (ShoppingCart) session.getAttribute("cart");
+            Cart cart= (Cart) session.getAttribute("cart");
             if (cart == null) {
-                cart = new ShoppingCart();
+                cart = new Cart();
             }
             cart.addItem(ticketId, quantity);
             session.setAttribute("cart", cart);
@@ -49,7 +48,7 @@ public class ShoppingCartController {
 
     @GetMapping("/remove/{ticketId}")
     public String removeFromCart(@PathVariable long ticketId, HttpSession session) throws TicketNotFound {
-        ShoppingCart cart= (ShoppingCart) session.getAttribute("cart");
+        Cart cart= (Cart) session.getAttribute("cart");
         if (cart != null) {
             cart.removeItem(ticketId);
         }
@@ -58,7 +57,7 @@ public class ShoppingCartController {
 
     @GetMapping("/update/{ticketId}")
     public String updateQuantity(@PathVariable("ticketId") long ticketId, @RequestParam("quantity") int quantity, HttpSession session) {
-        ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");
+        Cart cart = (Cart) session.getAttribute("cart");
         if (cart != null) {
             cart.updateQuantity(ticketId, quantity);
         }
@@ -67,7 +66,7 @@ public class ShoppingCartController {
 
     @GetMapping("/clear")
     public String clearCart(HttpSession session) {
-        ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");
+        Cart cart = (Cart) session.getAttribute("cart");
         if (cart != null) {
             cart.clearCart();
         }
