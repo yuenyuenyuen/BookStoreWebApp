@@ -40,7 +40,7 @@ public class FavoriteController {
         favorite.setTicket(ticket);
         favorite.setUser(user);
         favService.addFavorite(favorite);
-        return "redirect:/favorite/all";
+        return "redirect:/ticket/view/{ticketId}";
     }
 
     @GetMapping("/all")
@@ -57,6 +57,6 @@ public class FavoriteController {
     public String removeFavorite(@PathVariable("ticketId") long ticketId, Principal principal) throws FavoriteNotFound, TicketNotFound {
         TicketUser user = tuService.getUserByUsername(principal.getName());
         favService.removeFavorite(ticketId, user);
-        return "redirect:/favorite/all";
+        return "redirect:/ticket/view/{ticketId}";
     }
 }
