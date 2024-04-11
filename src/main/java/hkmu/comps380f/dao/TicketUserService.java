@@ -31,4 +31,12 @@ public class TicketUserService implements UserDetailsService {
         }
         return new User(ticketUser.getUsername(), ticketUser.getPassword(), authorities);
     }
+
+    public TicketUser getUserByUsername(String username) {
+        TicketUser ticketUser = ticketUserRepo.findById(username).orElse(null);
+        if (ticketUser == null) {
+            throw new UsernameNotFoundException("User '" + username + "' not found.");
+        }
+        return ticketUser;
+    }
 }

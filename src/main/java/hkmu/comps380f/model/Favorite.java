@@ -9,6 +9,11 @@ public class Favorite {
     private long id;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
+    private TicketUser user;
+
+    @ManyToOne
+    @JoinColumn(name = "book_id")
     private Ticket ticket;
 
     // Other fields and methods as needed
@@ -27,5 +32,13 @@ public class Favorite {
 
     public void setTicket(Ticket ticket) {
         this.ticket = ticket;
+    }
+
+    public TicketUser getUser() {
+        return user;
+    }
+
+    public void setUser(TicketUser user) {
+        this.user = user;
     }
 }

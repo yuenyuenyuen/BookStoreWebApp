@@ -1,3 +1,4 @@
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,6 +14,7 @@
     [<a href="<c:url value="/user/userinfo"/>">User Info</a>]
     &nbsp;
 </security:authorize>
+[<a href="<c:url value="/favorite/all"/>">View Favorites</a>]
 <br/>
 <security:authorize access="hasAnyRole('ADMIN', 'USER')">
     <c:url var="logoutUrl" value="/logout"/>
@@ -23,13 +25,6 @@
 </security:authorize>
 <h2>Book Store</h2>
 <a href="<c:url value="/ticket/history/all" />">View Comments History</a><br/><br/>
-
-<c:forEach items="${ticketDatabase}" var="entry">
-    <form action="<c:url value='/ticket/favorite/${entry.id}' />" method="POST">
-        <input type="submit" value="Add to Favorites">
-        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-    </form>
-</c:forEach>
 
 <security:authorize access="hasRole('ADMIN')">
     <a href="<c:url value="/user" />">Manage User Accounts</a><br/><br/>

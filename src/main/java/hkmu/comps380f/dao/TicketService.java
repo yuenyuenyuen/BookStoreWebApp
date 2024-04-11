@@ -1,11 +1,10 @@
 package hkmu.comps380f.dao;
 
 import hkmu.comps380f.exception.AttachmentNotFound;
+import hkmu.comps380f.exception.FavoriteNotFound;
 import hkmu.comps380f.exception.InvalidFileFormatException;
 import hkmu.comps380f.exception.TicketNotFound;
-import hkmu.comps380f.model.Attachment;
-import hkmu.comps380f.model.Comment;
-import hkmu.comps380f.model.Ticket;
+import hkmu.comps380f.model.*;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +21,7 @@ public class TicketService {
     private TicketRepository tRepo;
     @Resource
     private AttachmentRepository aRepo;
+
     @Transactional
     public List<Ticket> getTickets() {
         return tRepo.findAll();
@@ -153,28 +153,5 @@ public class TicketService {
                 return;
             }
         }
-    }
-    @Transactional
-    public void addFavorite(Favorite favorite) {
-        favoriteRepository.save(favorite);
-    }
-
-    @Transactional
-    public void removeFavorite(long favoriteId) throws FavoriteNotFound {
-        Favorite favorite = favoriteRepository.findById(favoriteId).orElse(null);
-        if (favorite == null) {
-            throw new FavoriteNotFound(favoriteId);
-        }
-        favoriteRepository.delete(favorite);
-    }
-
-    @Transactional
-    public List<Ticket> getFavoriteTickets() {
-        List<Favorite> favorites = favoriteRepository.findAll();
-        List<Ticket> favoriteTickets = new ArrayList<>();
-        for (Favorite favorite : favorites) {
-            favoriteTickets.add(favorite.getTicket());
-        }
-        return favoriteTickets;
     }
 }

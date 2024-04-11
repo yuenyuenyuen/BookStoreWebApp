@@ -1,6 +1,8 @@
 package hkmu.comps380f.controller;
 
+import hkmu.comps380f.dao.FavoriteService;
 import hkmu.comps380f.dao.TicketService;
+import hkmu.comps380f.dao.TicketUserService;
 import hkmu.comps380f.exception.AttachmentNotFound;
 import hkmu.comps380f.exception.InvalidFileFormatException;
 import hkmu.comps380f.exception.TicketNotFound;
@@ -9,8 +11,6 @@ import hkmu.comps380f.model.Comment;
 import hkmu.comps380f.model.Ticket;
 import hkmu.comps380f.view.DownloadingView;
 import jakarta.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -31,8 +31,12 @@ import java.util.UUID;
 public class TicketController {
     @Resource
     private TicketService tService;
+    @Resource
+    private TicketUserService tuService;
+    @Resource
+    private FavoriteService favService;
 
-    public class commentForm{
+    public class commentForm {
         private String name;
         private String content;
 
@@ -52,6 +56,7 @@ public class TicketController {
             this.content = content;
         }
     }
+
     // Controller methods, Form-backing object, ...
     @GetMapping(value = {"", "/list"})
     public String list(ModelMap model, Principal principal) {
@@ -90,21 +95,37 @@ public class TicketController {
             this.author = author;
         }
 
-        public String getDescription() {return description;}
+        public String getDescription() {
+            return description;
+        }
 
-        public void setDescription(String description) {this.description = description;}
+        public void setDescription(String description) {
+            this.description = description;
+        }
 
-        public float getPrice() {return price;}
+        public float getPrice() {
+            return price;
+        }
 
-        public void setPrice(float price) {this.price = price;}
+        public void setPrice(float price) {
+            this.price = price;
+        }
 
-        public boolean getAvailability() {return availability;}
+        public boolean getAvailability() {
+            return availability;
+        }
 
-        public void setAvailability(boolean availability) {this.availability = availability;}
+        public void setAvailability(boolean availability) {
+            this.availability = availability;
+        }
 
-        public List<Comment> getComments() {return comments;}
+        public List<Comment> getComments() {
+            return comments;
+        }
 
-        public void setComments(List<Comment> comments) {this.comments = comments;}
+        public void setComments(List<Comment> comments) {
+            this.comments = comments;
+        }
 
         public MultipartFile getAttachments() {
             return attachments;
@@ -131,7 +152,7 @@ public class TicketController {
 
     @GetMapping("/view/{ticketId}")
     public ModelAndView view(@PathVariable("ticketId") long ticketId, Principal principal,
-                       ModelMap model)
+                             ModelMap model)
             throws TicketNotFound {
         Ticket ticket = tService.getTicket(ticketId);
         commentForm commentForm = new commentForm();
@@ -139,6 +160,7 @@ public class TicketController {
         model.addAttribute("ticket", ticket);
         model.addAttribute("commentForm", commentForm);
         model.addAttribute("availability", ticket.getAvailability());
+        model.addAttribute("isFavorite", favService.isFavorite(ticketId, principal.getName()));
         return new ModelAndView("view", "commentForm", commentForm);
     }
 
@@ -166,8 +188,7 @@ public class TicketController {
     }
 
 
-
-//    @GetMapping("/history/{ticketId}")
+    //    @GetMapping("/history/{ticketId}")
 //    public ModelAndView history(@PathVariable("ticketId") long ticketId, Principal principal,
 //                             ModelMap model)
 //            throws TicketNotFound {
@@ -190,7 +211,6 @@ public class TicketController {
 
         return modelAndView;
     }
-
 
 
     @GetMapping("/{id}/edit")
@@ -255,32 +275,5 @@ public class TicketController {
     @ExceptionHandler({TicketNotFound.class, AttachmentNotFound.class, InvalidFileFormatException.class})
     public ModelAndView error(Exception e) {
         return new ModelAndView("error", "message", e.getMessage());
-    }
-     @GetMapping ("/favorite/{ticketId}")
-    public String addFavorites(@PathVariable("ticketId")long ticketId) throws TicketNotFound{
-        Ticket ticket = tService.getTicket(ticketId);
-        return "redirect:/favorite";
-    }
-
-    @PostMapping("/favorite/{ticketId}")
-    public String addFavorite(@PathVariable("ticketId") long ticketId, ModelMap model) throws TicketNotFound{
-        Ticket ticket = tService.getTicket(ticketId);
-        Favorite favorite = new Favorite();
-        favorite.setTicket(ticket);
-        tService.addFavorite(favorite);
-        return "redirect:/favorite";
-    }
-    @GetMapping("/favorite/remove/{favoriteId}")
-    public String removeFavorite(@PathVariable("favoriteId")long favoriteId) throws FavoriteNotFound{
-        tService.removeFavorite(favoriteId);
-        return "redirect:/favorite";
-    }
-    @GetMapping("/favorite/all")
-    public ModelAndView favorite(Principal principal, ModelMap model) throws TicketNotFound {
-        ModelAndView modelAndView = new ModelAndView("favorite");
-
-        List<Ticket> favoriteTickets = tService.getFavoriteTickets(); // Get favorite tickets
-        model.addAttribute("favoriteTickets", favoriteTickets);
-        return modelAndView;
     }
 }
