@@ -21,6 +21,9 @@ public class SecurityConfig {
                         .requestMatchers("/user/delete/**").hasRole("ADMIN")
                         .requestMatchers("/ticket/delete/**").hasRole("ADMIN")
                         .requestMatchers("/user/register").permitAll()
+                        .requestMatchers("/cart/**").hasAnyRole("ADMIN","USER")
+                        .requestMatchers("/favorite/**").hasAnyRole("ADMIN","USER")
+                        .requestMatchers("/checkout/**").hasAnyRole("ADMIN","USER")
                         .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
