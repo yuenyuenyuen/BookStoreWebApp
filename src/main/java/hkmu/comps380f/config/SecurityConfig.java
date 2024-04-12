@@ -17,11 +17,13 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/user/register").permitAll()
+                        .requestMatchers("/user/userinfo").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/user/userinfo/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasRole("ADMIN")
                         .requestMatchers("/ticket/delete/**").hasRole("ADMIN")
-                        .requestMatchers("/cart/**").hasAnyRole("ADMIN","USER")
-                        .requestMatchers("/favorite/**").hasAnyRole("ADMIN","USER")
-                        .requestMatchers("/checkout/**").hasAnyRole("ADMIN","USER")
+                        .requestMatchers("/cart/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/favorite/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/checkout/**").hasAnyRole("ADMIN", "USER")
                         .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
