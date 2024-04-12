@@ -31,6 +31,7 @@
             <form:label path="address">Address</form:label>
             <form:input type="text" path="address" class="form-control"/>
         </div>
+        <form:hidden path="roles" value="ROLE_USER"/>
         <security:authorize access="hasRole('ADMIN')">
             <div class="form-check">
                 <form:checkbox path="roles" value="ROLE_USER" class="form-check-input"/>ROLE_USER
