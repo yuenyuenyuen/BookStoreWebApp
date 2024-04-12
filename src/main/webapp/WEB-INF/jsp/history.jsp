@@ -9,6 +9,7 @@
 <div class="container">
     <c:forEach items="${tickets}" var="ticket">
         <h4>Comments:</h4>
+        <h5>Book Name:<c:out value="${ticket.bookName}"/></h5>
         <c:choose>
             <c:when test="${fn:length(ticket.comments) > 0}">
                 <c:forEach var="cm" items="${ticket.comments}">
