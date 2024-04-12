@@ -34,9 +34,6 @@
         <form:hidden path="roles" value="ROLE_USER"/>
         <security:authorize access="hasRole('ADMIN')">
             <div class="form-check">
-                <form:checkbox path="roles" value="ROLE_USER" class="form-check-input"/>ROLE_USER
-            </div>
-            <div class="form-check">
                 <form:checkbox path="roles" value="ROLE_ADMIN" class="form-check-input"/>ROLE_ADMIN
             </div>
         </security:authorize>
