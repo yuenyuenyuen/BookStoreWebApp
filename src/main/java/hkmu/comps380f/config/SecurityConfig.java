@@ -27,12 +27,10 @@ public class SecurityConfig {
                         .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
-                        .permitAll()
                         .loginPage("/login")
                         .defaultSuccessUrl("/")
-                        .failureHandler((request, response, exception) -> {
-                            response.sendRedirect("/login?error");
-                        })
+                        .failureUrl("/login?error")
+                        .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
