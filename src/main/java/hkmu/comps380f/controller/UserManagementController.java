@@ -119,7 +119,7 @@ public class UserManagementController {
         umService.updateTicketUser(form.getUsername(),
                 "{noop}" + form.getPassword(), form.getFullName(), form.getEmail(),
                 form.getAddress(), form.getRoles());
-        return "redirect:/login";
+        return "redirect:/ticket";
     }
     @GetMapping("/userinfo/{userName}")
     public ModelAndView editInfoWithId(@PathVariable("userName") String userName, Model model, Form form, Principal principal) {
@@ -143,7 +143,7 @@ public class UserManagementController {
         umService.updateTicketUser(form.getUsername(),
                 "{noop}" + form.getPassword(), form.getFullName(), form.getEmail(),
                 form.getAddress(), form.getRoles());
-        return "redirect:/login";
+        return "redirect:/ticket";
     }
 
     @GetMapping("/delete/{username}")
